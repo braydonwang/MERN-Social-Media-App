@@ -1,3 +1,4 @@
+import { useDispatch } from "react-redux";
 import useStyles from "./styles";
 import {
   Card,
@@ -11,9 +12,19 @@ import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import DeleteIcon from "@material-ui/icons/Delete";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import moment from "moment";
+import { deletePost, likePost } from "../../../features/posts/postSlice";
 
 export default function Post({ post, setCurrentId }) {
   const classes = useStyles();
+  const dispatch = useDispatch();
+
+  const handleDeletePost = () => {
+    dispatch(deletePost(post._id));
+  };
+
+  const handleLikePost = () => {
+    dispatch(likePost(post._id));
+  };
 
   return (
     <Card className={classes.card}>
@@ -36,30 +47,40 @@ export default function Post({ post, setCurrentId }) {
             setCurrentId(post._id);
           }}
         >
-          <MoreHorizIcon fontSize="default" />
+          <MoreHorizIcon fontSize="medium" />
         </Button>
       </div>
       <div className={classes.details}>
         <Typography variant="body2" color="textSecondary">
-          {post.tags.map((tag) => `#${tag}`)}
+          {post.tags.map((tag) => `#${tag} `)}
         </Typography>
       </div>
       <Typography className={classes.title} variant="h5" gutterBottom>
         {post.title}
       </Typography>
       <CardContent>
-        <Typography variant="h5" gutterBottom>
+        <Typography variant="body2" color="textSecondary" component="p">
           {post.caption}
         </Typography>
       </CardContent>
       <CardActions className={classes.cardActions}>
-        <Button size="small" color="primary" onClick={() => {}}>
+        <Button
+          className={classes.button}
+          size="small"
+          color="primary"
+          onClick={handleLikePost}
+        >
           <ThumbUpAltIcon fontSize="small" />
-          {`Like ${post.likes.length}`}
+          &nbsp; {`Like ${post.likes}`}
         </Button>
-        <Button size="small" color="primary" onClick={() => {}}>
+        <Button
+          className={classes.button}
+          size="small"
+          color="primary"
+          onClick={handleDeletePost}
+        >
           <DeleteIcon fontSize="small" />
-          Delete
+          &thinsp; Delete
         </Button>
       </CardActions>
     </Card>

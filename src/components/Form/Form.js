@@ -15,7 +15,7 @@ export default function Form({ currentId, setCurrentId }) {
     creator: "",
     title: "",
     caption: "",
-    tags: "",
+    tags: [],
     selectedFile: "",
   });
   const classes = useStyles();
@@ -30,11 +30,14 @@ export default function Form({ currentId, setCurrentId }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (currentId) {
-      dispatch(updatePost({ currentId, postData }));
-    } else {
-      dispatch(createPost(postData));
+    if (postData.creator.length > 0 && postData.caption.length > 0) {
+      if (currentId) {
+        dispatch(updatePost({ currentId, postData }));
+      } else {
+        dispatch(createPost(postData));
+      }
     }
+
     clear();
   };
 
@@ -44,7 +47,7 @@ export default function Form({ currentId, setCurrentId }) {
       creator: "",
       title: "",
       caption: "",
-      tags: "",
+      tags: [],
       selectedFile: "",
     });
   };
@@ -65,7 +68,7 @@ export default function Form({ currentId, setCurrentId }) {
           variant="outlined"
           label="Creator"
           fullWidth
-          value={postData.creator ?? ""}
+          value={postData.creator}
           onChange={(e) =>
             setPostData({ ...postData, creator: e.target.value })
           }
@@ -75,7 +78,7 @@ export default function Form({ currentId, setCurrentId }) {
           variant="outlined"
           label="Title"
           fullWidth
-          value={postData.title ?? ""}
+          value={postData.title}
           onChange={(e) => setPostData({ ...postData, title: e.target.value })}
         />
         <TextField
@@ -83,7 +86,7 @@ export default function Form({ currentId, setCurrentId }) {
           variant="outlined"
           label="Caption"
           fullWidth
-          value={postData.caption ?? ""}
+          value={postData.caption}
           onChange={(e) =>
             setPostData({ ...postData, caption: e.target.value })
           }
@@ -93,12 +96,15 @@ export default function Form({ currentId, setCurrentId }) {
           variant="outlined"
           label="Tags"
           fullWidth
-          value={postData.tags ?? ""}
-          onChange={(e) => setPostData({ ...postData, tags: e.target.value })}
+          value={postData.tags}
+          onChange={(e) =>
+            setPostData({ ...postData, tags: e.target.value.split(",") })
+          }
         />
         <div className={classes.fileInput}>
           <FileBase
             type="file"
+            value={postData.selectedFile}
             multiple={false}
             onDone={({ base64 }) =>
               setPostData({ ...postData, selectedFile: base64 })
