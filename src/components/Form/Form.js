@@ -12,7 +12,6 @@ export default function Form({ currentId, setCurrentId }) {
     currentId ? state.posts.posts.find((p) => p._id === currentId) : null
   );
   const [postData, setPostData] = useState({
-    creator: "",
     title: "",
     caption: "",
     tags: [],
@@ -20,6 +19,7 @@ export default function Form({ currentId, setCurrentId }) {
   });
   const classes = useStyles();
   const dispatch = useDispatch();
+  const user = JSON.parse(localStorage.getItem("profile"));
 
   useEffect(() => {
     if (post) {
@@ -30,21 +30,35 @@ export default function Form({ currentId, setCurrentId }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (postData.creator.length > 0 && postData.caption.length > 0) {
+    if (postData.caption.length > 0) {
       if (currentId) {
-        dispatch(updatePost({ currentId, postData }));
+        dispatch(
+          updatePost({
+            currentId,
+            postData: { ...postData, name: user?.result?.name },
+          })
+        );
       } else {
-        dispatch(createPost(postData));
+        dispatch(createPost({ ...postData, name: user?.result?.name }));
       }
     }
 
     clear();
   };
 
+  if (!user?.result?.name) {
+    return (
+      <Paper className={classes.paper}>
+        <Typography variant="h6" align="center">
+          Please sign in to create your own memories.
+        </Typography>
+      </Paper>
+    );
+  }
+
   const clear = () => {
     setCurrentId(null);
     setPostData({
-      creator: "",
       title: "",
       caption: "",
       tags: [],
@@ -63,16 +77,6 @@ export default function Form({ currentId, setCurrentId }) {
         <Typography variant="h6">
           {currentId ? "Editing" : "Creating"} a Post
         </Typography>
-        <TextField
-          name="creator"
-          variant="outlined"
-          label="Creator"
-          fullWidth
-          value={postData.creator}
-          onChange={(e) =>
-            setPostData({ ...postData, creator: e.target.value })
-          }
-        />
         <TextField
           name="title"
           variant="outlined"
@@ -94,7 +98,7 @@ export default function Form({ currentId, setCurrentId }) {
         <TextField
           name="tags"
           variant="outlined"
-          label="Tags"
+          label="Tags (comma separated)"
           fullWidth
           value={postData.tags}
           onChange={(e) =>

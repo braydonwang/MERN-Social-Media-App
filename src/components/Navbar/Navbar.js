@@ -1,13 +1,43 @@
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import { AppBar, Avatar, Button, Toolbar, Typography } from "@material-ui/core";
 import mediaLogo from "../../images/media-logo.png";
+import { logout } from "../../features/auth/authSlice";
+import decode from "jwt-decode";
 
 import useStyles from "./styles";
 
 export default function Navbar() {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const location = useLocation();
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile")));
 
-  const user = null;
+  const logoutUser = () => {
+    dispatch(logout());
+
+    history.push("/");
+    setUser(null);
+  };
+
+  useEffect(() => {
+    const token = user?.token;
+
+    if (token) {
+      const decodedToken = decode(token);
+
+      if (decodedToken.exp * 1000 < new Date().getTime()) {
+        dispatch(logout());
+
+        history.push("/");
+        setUser(null);
+      }
+    }
+
+    setUser(JSON.parse(localStorage.getItem("profile")));
+  }, [location]);
 
   return (
     <AppBar className={classes.appBar} position="static" color="inherit">
@@ -21,7 +51,7 @@ export default function Navbar() {
         >
           Influenster
         </Typography>
-        <img className={classes.image} src={mediaLogo} alt="Logo" height="60" />
+        <img className={classes.image} src={mediaLogo} alt="Logo" height="45" />
       </div>
       <Toolbar className={classes.toolbar}>
         {user ? (
@@ -40,7 +70,7 @@ export default function Navbar() {
               variant="contained"
               className={classes.logout}
               color="secondary"
-              onClick={() => {}}
+              onClick={logoutUser}
             >
               Logout
             </Button>
