@@ -3,7 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { TextField, Button, Typography, Paper } from "@material-ui/core";
 import FileBase from "react-file-base64";
 
-import { createPost, updatePost } from "../../features/posts/postSlice";
+import {
+  createPost,
+  updatePost,
+  getPosts,
+} from "../../features/posts/postSlice";
 
 import useStyles from "./styles";
 
@@ -17,6 +21,7 @@ export default function Form({ currentId, setCurrentId }) {
     tags: [],
     selectedFile: "",
   });
+  const { currentPage } = useSelector((state) => state.posts);
   const classes = useStyles();
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem("profile"));
@@ -40,6 +45,7 @@ export default function Form({ currentId, setCurrentId }) {
         );
       } else {
         dispatch(createPost({ ...postData, name: user?.result?.name }));
+        dispatch(getPosts(currentPage));
       }
     }
 
@@ -48,7 +54,7 @@ export default function Form({ currentId, setCurrentId }) {
 
   if (!user?.result?.name) {
     return (
-      <Paper className={classes.paper}>
+      <Paper className={classes.paper} elevation={6}>
         <Typography variant="h6" align="center">
           Please sign in to create your own memories.
         </Typography>
@@ -67,7 +73,7 @@ export default function Form({ currentId, setCurrentId }) {
   };
 
   return (
-    <Paper className={classes.paper}>
+    <Paper className={classes.paper} elevation={6}>
       <form
         autoComplete="off"
         noValidate

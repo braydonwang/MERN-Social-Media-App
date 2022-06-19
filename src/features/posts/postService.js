@@ -3,9 +3,15 @@ import axios from "axios";
 const API_URL = "/api/posts/";
 
 const getPosts = async (page) => {
-  const res = await axios.get(`/posts?page=${page}`);
+  const { data } = await axios.get(`/api/posts?page=${page}`);
 
-  return res.data;
+  return data;
+};
+
+const getPost = async (id) => {
+  const { data } = await axios.get(API_URL + id);
+
+  return data;
 };
 
 const getPostsBySearch = async (searchQuery) => {
@@ -81,6 +87,7 @@ const likePost = async (postData) => {
 
 const postService = {
   getPosts,
+  getPost,
   getPostsBySearch,
   createPost,
   updatePost,

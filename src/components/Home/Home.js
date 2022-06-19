@@ -52,7 +52,6 @@ export default function Home() {
 
   const searchPost = () => {
     if (search.trim() || tags.length > 0) {
-      console.log("Test");
       dispatch(getPostsBySearch({ search, tags: tags.join(",") }));
       history.push(
         `/posts/search?searchQuery=${search || "none"}&tags=${tags.join(",")}`
@@ -108,9 +107,11 @@ export default function Home() {
               </Button>
             </AppBar>
             <Form currentId={currentId} setCurrentId={setCurrentId} />
-            <Paper className={classes.pagination} elevation={6}>
-              <Paginate page={page} />
-            </Paper>
+            {!searchQuery && !tagsQuery && (
+              <Paper className={classes.pagination} elevation={6}>
+                <Paginate page={page} />
+              </Paper>
+            )}
           </Grid>
         </Grid>
       </Container>
