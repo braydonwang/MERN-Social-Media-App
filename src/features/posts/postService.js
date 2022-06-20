@@ -85,6 +85,24 @@ const likePost = async (postData) => {
   return res.data;
 };
 
+const commentPost = async (commentData) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${
+        JSON.parse(localStorage.getItem("profile")).token
+      }`,
+    },
+  };
+
+  const res = await axios.post(
+    API_URL + commentData.id + "/commentPost",
+    { comment: commentData.comment },
+    config
+  );
+
+  return res.data;
+};
+
 const postService = {
   getPosts,
   getPost,
@@ -93,6 +111,7 @@ const postService = {
   updatePost,
   deletePost,
   likePost,
+  commentPost,
 };
 
 export default postService;

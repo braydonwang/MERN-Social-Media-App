@@ -49,7 +49,8 @@ export default makeStyles({
     display: "flex",
     justifyContent: "space-between",
   },
-  button: {
-    alignItems: "center",
+  cardAction: {
+    display: "block",
+    textAlign: "initial",
   },
 });

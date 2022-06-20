@@ -63,7 +63,7 @@ export default function Home() {
 
   return (
     <Grow in>
-      <Container maxWidth="xl">
+      <Container maxWidth={false}>
         <Grid
           container
           className={classes.gridContainer}

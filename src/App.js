@@ -20,7 +20,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <Container maxWidth="lg">
+      <Container maxWidth="xl">
         <Navbar />
         <Switch>
           <Route path="/" exact component={() => <Redirect to="/posts" />} />
